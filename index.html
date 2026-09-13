@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Listening Test</title>
+<title>Accent Listening Test</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" />
@@ -84,7 +84,7 @@ main{padding:40px 0 72px;}
 .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent-strong); margin:0 0 18px;}
 h1.hero{font-family:var(--serif); font-weight:400; font-size:clamp(46px,8vw,86px); line-height:.98; letter-spacing:-.01em; margin:0 0 20px; text-wrap:balance;}
 h1.hero em{font-style:italic; color:var(--accent-strong);}
-.lead{font-size:clamp(17px,2.4vw,20px); color:var(--ink-soft); max-width:56ch; margin:0 0 36px;}
+.lead{font-size:clamp(17px,2.4vw,20px); color:var(--ink-soft); max-width:60ch; margin:0 0 36px;}
 .steps{list-style:none; padding:0; margin:0 0 40px; display:grid; gap:18px; max-width:640px;}
 .steps li{display:grid; grid-template-columns:auto 1fr; gap:16px; align-items:start;}
 .steps .num{font-family:var(--mono); font-size:12px; color:var(--accent-strong); border:1px solid var(--accent-line); background:var(--accent-tint); border-radius:6px; padding:3px 8px; letter-spacing:.1em;}
@@ -110,33 +110,42 @@ h1.hero em{font-style:italic; color:var(--accent-strong);}
 .qhead{display:flex; align-items:baseline; gap:14px; margin:0 0 6px; flex-wrap:wrap;}
 .qtag{font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-strong);}
 .qsub{font-family:var(--mono); font-size:12px; color:var(--faint); letter-spacing:.06em;}
-h2.q{font-family:var(--serif); font-weight:400; font-size:clamp(30px,4.6vw,46px); line-height:1.04; margin:0 0 30px; letter-spacing:-.005em; text-wrap:balance;}
+h2.q{font-family:var(--serif); font-weight:400; font-size:clamp(28px,4.2vw,42px); line-height:1.06; margin:0 0 22px; letter-spacing:-.005em; text-wrap:balance;}
+
+/* reference clips */
+.refrow{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:26px;}
+@media (max-width:640px){ .refrow{grid-template-columns:1fr;} }
+.refcard{background:var(--surface-2); border:1px solid var(--line); border-radius:14px; padding:16px 18px;}
+.reflabel{font-size:13px; font-weight:600; margin-bottom:10px; color:var(--ink-soft);}
+.reflabel .refhint{font-weight:400; color:var(--muted);}
 
 .panels{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
 @media (max-width:640px){ .panels{grid-template-columns:1fr;} }
+.panels3{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+@media (max-width:760px){ .panels3{grid-template-columns:1fr;} }
 
-.panel{position:relative; background:var(--surface); border:1.5px solid var(--line); border-radius:18px; padding:22px 22px 24px; box-shadow:var(--shadow); cursor:pointer; transition:border-color .2s, box-shadow .2s, transform .15s, background .2s; text-align:left; color:inherit; font:inherit;}
+.panel{position:relative; background:var(--surface); border:1.5px solid var(--line); border-radius:18px; padding:20px 20px 22px; box-shadow:var(--shadow); cursor:pointer; transition:border-color .2s, box-shadow .2s, transform .15s, background .2s; text-align:left; color:inherit; font:inherit;}
 .panel:hover{border-color:var(--line-strong); transform:translateY(-2px); box-shadow:var(--shadow-lift);}
 .panel.sel{border-color:var(--accent); background:linear-gradient(180deg, var(--accent-tint), var(--surface) 60%); box-shadow:var(--shadow-lift);}
-.panel .ptop{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;}
+.panel .ptop{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;}
 .panel .plabel{display:flex; align-items:center; gap:11px;}
 .panel .badge{font-family:var(--mono); font-weight:600; font-size:15px; width:34px; height:34px; border-radius:9px; display:grid; place-items:center; background:var(--surface-3); color:var(--ink); border:1px solid var(--line);}
 .panel.sel .badge{background:var(--accent); color:var(--on-accent); border-color:var(--accent);}
 .panel .ptitle{font-size:14px; font-weight:600;}
-.panel .ptime{font-family:var(--mono); font-size:12px; color:var(--muted); font-variant-numeric:tabular-nums;}
-.check{width:22px; height:22px; border-radius:50%; border:1.5px solid var(--line-strong); display:grid; place-items:center; color:transparent; transition:all .2s;}
+.check{width:22px; height:22px; border-radius:50%; border:1.5px solid var(--line-strong); display:grid; place-items:center; color:transparent; transition:all .2s; flex:none;}
 .panel.sel .check{background:var(--accent); border-color:var(--accent); color:var(--on-accent);}
 .check svg{width:13px; height:13px;}
 
 .player{display:flex; align-items:center; gap:14px;}
-.play{flex:none; width:52px; height:52px; border-radius:50%; border:1px solid var(--line-strong); background:var(--surface-2); color:var(--ink); cursor:pointer; display:grid; place-items:center; transition:transform .12s, background .2s, border-color .2s;}
+.play{flex:none; width:44px; height:44px; border-radius:50%; border:1px solid var(--line-strong); background:var(--surface-2); color:var(--ink); cursor:pointer; display:grid; place-items:center; transition:transform .12s, background .2s, border-color .2s;}
 .play:hover{background:var(--surface-3); border-color:var(--accent);}
 .panel.sel .play{border-color:var(--accent);}
 .play:active{transform:scale(.94);}
-.play svg{width:20px; height:20px; margin-left:1px;}
+.play svg{width:17px; height:17px; margin-left:1px;}
 .play.playing svg{margin-left:0;}
-.wave{flex:1; height:52px; width:100%;}
-.wave canvas{width:100%; height:100%; display:block;}
+.barwrap{flex:1; height:8px; border-radius:999px; background:var(--surface-3); overflow:hidden;}
+.refcard .barwrap{background:var(--surface-3);}
+.bar{height:100%; width:0%; background:var(--accent); border-radius:999px;}
 
 .qnav{display:flex; align-items:center; justify-content:space-between; margin-top:32px; gap:14px;}
 .qnav .left{display:flex; gap:10px;}
@@ -170,7 +179,7 @@ h2.q{font-family:var(--serif); font-weight:400; font-size:clamp(30px,4.6vw,46px)
   <div class="rail"><i id="rail"></i></div>
   <div class="wrap">
     <header class="top">
-      <div class="brand"><span class="dot"></span><span class="name" id="brandName">Listening Test</span></div>
+      <div class="brand"><span class="dot"></span><span class="name" id="brandName">Accent Listening Test</span></div>
       <div style="display:flex;align-items:center;gap:12px;">
         <span class="counter" id="counter" hidden><b id="cNow">01</b> / <span id="cTot">20</span></span>
         <button class="iconbtn" id="theme" aria-label="Toggle light and dark theme" title="Toggle theme">
@@ -185,13 +194,14 @@ h2.q{font-family:var(--serif); font-weight:400; font-size:clamp(30px,4.6vw,46px)
 
   <!-- INTRO -->
   <section class="screen" id="intro">
-    <p class="eyebrow">Blind A/B Audio Comparison</p>
-    <h1 class="hero">Trust your <em>ears</em>,<br/>not the label.</h1>
-    <p class="lead">You'll hear twenty pairs of short clips. For each pair, play both and pick the one that sounds better to you. There are no right answers — only your honest preference.</p>
+    <p class="eyebrow">Blind listening study</p>
+    <h1 class="hero">Whose <em>accent</em><br/>wins?</h1>
+    <p class="lead">You'll hear 20 short trials. Each one gives you two reference clips — the target accent, and the speaker's own natural voice — followed by three candidate versions of that speaker converted toward the target accent. Pick whichever one sounds closest to the target accent. Don't worry about audio quality or whether it still sounds like the same person — judge accent only.</p>
+    <p class="lead" style="margin-top:-24px; color:var(--accent-strong); font-weight:600;">Please wear headphones. The differences between options are subtle and easy to miss on laptop or phone speakers.</p>
     <ol class="steps">
-      <li><span class="num">01</span><div><h3>Play both clips</h3><p>Tap the play button on Sample A and Sample B. Replay as many times as you like.</p></div></li>
-      <li><span class="num">02</span><div><h3>Pick the better one</h3><p>Select the panel that sounds better. Your choice highlights in amber.</p></div></li>
-      <li><span class="num">03</span><div><h3>Move through all twenty</h3><p>Review everything at the end, then submit. Takes about five minutes.</p></div></li>
+      <li><span class="num">01</span><div><h3>Listen to both references</h3><p>Play the target accent clip and the speaker's natural voice for context.</p></div></li>
+      <li><span class="num">02</span><div><h3>Compare the three options</h3><p>Play each candidate and pick whichever matches the target accent most closely.</p></div></li>
+      <li><span class="num">03</span><div><h3>Move through all 20 trials</h3><p>Review everything at the end, then submit. Takes about 10 minutes.</p></div></li>
     </ol>
     <div class="idfield">
       <label for="pid">Participant tag <span style="text-transform:none;letter-spacing:0;">(optional)</span></label>
@@ -201,42 +211,40 @@ h2.q{font-family:var(--serif); font-weight:400; font-size:clamp(30px,4.6vw,46px)
       Begin the test
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </button>
-    <p class="meta" id="introMeta">Anonymous · headphones recommended · ~5 min</p>
+    <p class="meta" id="introMeta">Anonymous · headphones required · ~10 min</p>
   </section>
 
   <!-- QUESTION -->
   <section class="screen" id="question" hidden>
     <div class="qhead">
-      <span class="qtag" id="qtag">Pair 01</span>
-      <span class="qsub" id="qsub">two takes · which do you prefer</span>
+      <span class="qtag" id="qtag">Trial 01</span>
+      <span class="qsub" id="qsub">target accent: England</span>
     </div>
-    <h2 class="q" id="qprompt">Which sample sounds better to you?</h2>
-    <div class="panels">
-      <button class="panel" id="panelA" data-choice="A">
-        <div class="ptop">
-          <div class="plabel"><span class="badge">A</span><span class="ptitle">Sample A</span></div>
-          <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
-        </div>
+    <h2 class="q" id="qprompt">Which sample sounds closest to the target accent?</h2>
+
+    <div class="refrow">
+      <div class="refcard">
+        <div class="reflabel">Target accent</div>
         <div class="player">
-          <span class="play" id="playA" role="button" tabindex="0" aria-label="Play Sample A">
+          <span class="play" id="playAccentRef" role="button" tabindex="0" aria-label="Play target accent reference">
             <svg class="ic-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
           </span>
-          <span class="wave"><canvas id="waveA"></canvas></span>
+          <div class="barwrap"><div class="bar" id="barAccentRef"></div></div>
         </div>
-      </button>
-      <button class="panel" id="panelB" data-choice="B">
-        <div class="ptop">
-          <div class="plabel"><span class="badge">B</span><span class="ptitle">Sample B</span></div>
-          <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
-        </div>
+      </div>
+      <div class="refcard">
+        <div class="reflabel">Speaker's natural voice<span class="refhint" id="refVoiceLabel"></span></div>
         <div class="player">
-          <span class="play" id="playB" role="button" tabindex="0" aria-label="Play Sample B">
+          <span class="play" id="playVoiceRef" role="button" tabindex="0" aria-label="Play speaker's natural voice">
             <svg class="ic-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
           </span>
-          <span class="wave"><canvas id="waveB"></canvas></span>
+          <div class="barwrap"><div class="bar" id="barVoiceRef"></div></div>
         </div>
-      </button>
+      </div>
     </div>
+
+    <div class="panels3" id="sampleGrid"></div>
+
     <div class="qnav">
       <div class="left">
         <button class="btn ghost" id="prevBtn">
@@ -244,7 +252,7 @@ h2.q{font-family:var(--serif); font-weight:400; font-size:clamp(30px,4.6vw,46px)
           Back
         </button>
       </div>
-      <span class="hint" id="navHint">Pick A or B to continue</span>
+      <span class="hint" id="navHint">Pick an option to continue</span>
       <button class="btn primary" id="nextBtn" disabled>
         <span id="nextLabel">Next</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -256,7 +264,7 @@ h2.q{font-family:var(--serif); font-weight:400; font-size:clamp(30px,4.6vw,46px)
   <section class="screen" id="review" hidden>
     <p class="eyebrow">Almost done</p>
     <h1 class="hero" style="font-size:clamp(36px,6vw,60px);margin-bottom:14px;">Review your answers.</h1>
-    <p class="lead" style="margin-bottom:8px;">Tap any pair to listen again and change your pick. When you're happy, submit.</p>
+    <p class="lead" style="margin-bottom:8px;">Tap any trial to listen again and change your pick. When you're happy, submit.</p>
     <div class="grid20" id="grid20"></div>
     <div class="reviewbar">
       <span class="tally" id="tally"></span>
@@ -292,37 +300,32 @@ h2.q{font-family:var(--serif); font-weight:400; font-size:clamp(30px,4.6vw,46px)
    ============================================================ */
 const CONFIG = {
   ENDPOINT: "https://script.google.com/macros/s/AKfycbw1VfiGvQ0MiuOSXY4OK8_kKZkFXCE51UtLmtJjQRekA9jE2LY7x99aA8nurjcJ1K14mA/exec",
-  TITLE: "Listening Test",
+  TITLE: "Accent Listening Test",
   QUESTION_COUNT: 20,
 };
 
-/* ---------- deterministic RNG (for stable waveforms) ---------- */
-function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+/* ---------- trial data ----------
+   Built from key_DO_NOT_SHARE.csv, keeping only fields safe to show a
+   participant (trial id, target accent, the speaker's original accent).
+   The "system" column (which algorithm/hyperparameter produced sample
+   A/B/C) is deliberately left out — that's the whole point of the blind
+   test, and it stays in the researcher's private key file, never here. */
+const TRIALS = [{"id":"study1_T01","targetAccent":"england","refAccent":"singapore","audio":{"accentRef":"audio/study1/T01_accent_reference.wav","voiceRef":"audio/study1/T01_voice_reference.wav","samples":{"A":"audio/study1/T01_sample_A.wav","B":"audio/study1/T01_sample_B.wav","C":"audio/study1/T01_sample_C.wav"}}},{"id":"study1_T02","targetAccent":"england","refAccent":"canada","audio":{"accentRef":"audio/study1/T02_accent_reference.wav","voiceRef":"audio/study1/T02_voice_reference.wav","samples":{"A":"audio/study1/T02_sample_A.wav","B":"audio/study1/T02_sample_B.wav","C":"audio/study1/T02_sample_C.wav"}}},{"id":"study1_T03","targetAccent":"england","refAccent":"scotland","audio":{"accentRef":"audio/study1/T03_accent_reference.wav","voiceRef":"audio/study1/T03_voice_reference.wav","samples":{"A":"audio/study1/T03_sample_A.wav","B":"audio/study1/T03_sample_B.wav","C":"audio/study1/T03_sample_C.wav"}}},{"id":"study1_T04","targetAccent":"england","refAccent":"india","audio":{"accentRef":"audio/study1/T04_accent_reference.wav","voiceRef":"audio/study1/T04_voice_reference.wav","samples":{"A":"audio/study1/T04_sample_A.wav","B":"audio/study1/T04_sample_B.wav","C":"audio/study1/T04_sample_C.wav"}}},{"id":"study1_T05","targetAccent":"india","refAccent":"ireland","audio":{"accentRef":"audio/study1/T05_accent_reference.wav","voiceRef":"audio/study1/T05_voice_reference.wav","samples":{"A":"audio/study1/T05_sample_A.wav","B":"audio/study1/T05_sample_B.wav","C":"audio/study1/T05_sample_C.wav"}}},{"id":"study1_T06","targetAccent":"india","refAccent":"new_zealand","audio":{"accentRef":"audio/study1/T06_accent_reference.wav","voiceRef":"audio/study1/T06_voice_reference.wav","samples":{"A":"audio/study1/T06_sample_A.wav","B":"audio/study1/T06_sample_B.wav","C":"audio/study1/T06_sample_C.wav"}}},{"id":"study1_T07","targetAccent":"india","refAccent":"australia","audio":{"accentRef":"audio/study1/T07_accent_reference.wav","voiceRef":"audio/study1/T07_voice_reference.wav","samples":{"A":"audio/study1/T07_sample_A.wav","B":"audio/study1/T07_sample_B.wav","C":"audio/study1/T07_sample_C.wav"}}},{"id":"study1_T08","targetAccent":"us","refAccent":"scotland","audio":{"accentRef":"audio/study1/T08_accent_reference.wav","voiceRef":"audio/study1/T08_voice_reference.wav","samples":{"A":"audio/study1/T08_sample_A.wav","B":"audio/study1/T08_sample_B.wav","C":"audio/study1/T08_sample_C.wav"}}},{"id":"study1_T09","targetAccent":"us","refAccent":"chinese","audio":{"accentRef":"audio/study1/T09_accent_reference.wav","voiceRef":"audio/study1/T09_voice_reference.wav","samples":{"A":"audio/study1/T09_sample_A.wav","B":"audio/study1/T09_sample_B.wav","C":"audio/study1/T09_sample_C.wav"}}},{"id":"study1_T10","targetAccent":"us","refAccent":"australia","audio":{"accentRef":"audio/study1/T10_accent_reference.wav","voiceRef":"audio/study1/T10_voice_reference.wav","samples":{"A":"audio/study1/T10_sample_A.wav","B":"audio/study1/T10_sample_B.wav","C":"audio/study1/T10_sample_C.wav"}}},{"id":"study2_T01","targetAccent":"england","refAccent":"singapore","audio":{"accentRef":"audio/study2/T01_accent_reference.wav","voiceRef":"audio/study2/T01_voice_reference.wav","samples":{"A":"audio/study2/T01_sample_A.wav","B":"audio/study2/T01_sample_B.wav","C":"audio/study2/T01_sample_C.wav"}}},{"id":"study2_T02","targetAccent":"england","refAccent":"canada","audio":{"accentRef":"audio/study2/T02_accent_reference.wav","voiceRef":"audio/study2/T02_voice_reference.wav","samples":{"A":"audio/study2/T02_sample_A.wav","B":"audio/study2/T02_sample_B.wav","C":"audio/study2/T02_sample_C.wav"}}},{"id":"study2_T03","targetAccent":"england","refAccent":"scotland","audio":{"accentRef":"audio/study2/T03_accent_reference.wav","voiceRef":"audio/study2/T03_voice_reference.wav","samples":{"A":"audio/study2/T03_sample_A.wav","B":"audio/study2/T03_sample_B.wav","C":"audio/study2/T03_sample_C.wav"}}},{"id":"study2_T04","targetAccent":"england","refAccent":"india","audio":{"accentRef":"audio/study2/T04_accent_reference.wav","voiceRef":"audio/study2/T04_voice_reference.wav","samples":{"A":"audio/study2/T04_sample_A.wav","B":"audio/study2/T04_sample_B.wav","C":"audio/study2/T04_sample_C.wav"}}},{"id":"study2_T05","targetAccent":"india","refAccent":"ireland","audio":{"accentRef":"audio/study2/T05_accent_reference.wav","voiceRef":"audio/study2/T05_voice_reference.wav","samples":{"A":"audio/study2/T05_sample_A.wav","B":"audio/study2/T05_sample_B.wav","C":"audio/study2/T05_sample_C.wav"}}},{"id":"study2_T06","targetAccent":"india","refAccent":"new_zealand","audio":{"accentRef":"audio/study2/T06_accent_reference.wav","voiceRef":"audio/study2/T06_voice_reference.wav","samples":{"A":"audio/study2/T06_sample_A.wav","B":"audio/study2/T06_sample_B.wav","C":"audio/study2/T06_sample_C.wav"}}},{"id":"study2_T07","targetAccent":"india","refAccent":"australia","audio":{"accentRef":"audio/study2/T07_accent_reference.wav","voiceRef":"audio/study2/T07_voice_reference.wav","samples":{"A":"audio/study2/T07_sample_A.wav","B":"audio/study2/T07_sample_B.wav","C":"audio/study2/T07_sample_C.wav"}}},{"id":"study2_T08","targetAccent":"us","refAccent":"scotland","audio":{"accentRef":"audio/study2/T08_accent_reference.wav","voiceRef":"audio/study2/T08_voice_reference.wav","samples":{"A":"audio/study2/T08_sample_A.wav","B":"audio/study2/T08_sample_B.wav","C":"audio/study2/T08_sample_C.wav"}}},{"id":"study2_T09","targetAccent":"us","refAccent":"chinese","audio":{"accentRef":"audio/study2/T09_accent_reference.wav","voiceRef":"audio/study2/T09_voice_reference.wav","samples":{"A":"audio/study2/T09_sample_A.wav","B":"audio/study2/T09_sample_B.wav","C":"audio/study2/T09_sample_C.wav"}}},{"id":"study2_T10","targetAccent":"us","refAccent":"australia","audio":{"accentRef":"audio/study2/T10_accent_reference.wav","voiceRef":"audio/study2/T10_voice_reference.wav","samples":{"A":"audio/study2/T10_sample_A.wav","B":"audio/study2/T10_sample_B.wav","C":"audio/study2/T10_sample_C.wav"}}}];
 
-/* ---------- build the 20 question pairs (placeholder audio) ----------
-   Each clip is a synthesized tone so the demo actually plays and A/B
-   sound different. Swap `makeClip` playback for real <audio> URLs later. */
-const WAVES = ['sine','triangle','sawtooth','square'];
-const QUESTIONS = Array.from({length:CONFIG.QUESTION_COUNT},(_,i)=>{
-  const n=i+1;
-  const base=176+((i*23)%150);
-  const semis=((i%5)-2);
-  return {
-    n,
-    prompt:"Which sample sounds better to you?",
-    sub:"two takes · which do you prefer",
-    a:{freq:base, type:WAVES[i%4], seed:n*1013+7, dur:2.6},
-    b:{freq:base*Math.pow(2,semis/12)*1.003, type:WAVES[(i+2)%4], seed:n*1013+29, dur:2.6},
-  };
-});
+const ACCENT_NAMES = {us:'the US (American)', england:'England (British)', india:'India', singapore:'Singapore', canada:'Canada', scotland:'Scotland', ireland:'Ireland', new_zealand:'New Zealand', australia:'Australia', chinese:'Chinese'};
+function fmtAccent(a){ return ACCENT_NAMES[a] || a.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()); }
 
-/* ---------- per-participant presentation order ----------
-   Each visitor sees the 20 pairs in a different shuffled order (so q1
-   isn't always first), but every answer is still stored keyed by its
-   true identity (q.n), never by the order it was shown in — that's what
-   ORDER/POSITION_OF are for. state.idx always means "position in the
-   shuffled sequence"; ORDER[state.idx] maps that back to the real
-   question identity index (0-based, i.e. q.n-1). */
+/* ---------- per-participant randomization ----------
+   Two independent shuffles, both seeded fresh per page load (= per
+   participant), and both invisible to how results are recorded:
+   1. ORDER/POSITION_OF — the sequence trials are presented in. state.idx
+      always means "position in the shuffled sequence"; ORDER[state.idx]
+      maps that back to the true trial identity index (0-based, into
+      TRIALS). Answers are always stored keyed by that identity.
+   2. TRIALS[i].slots — which on-screen slot (1st/2nd/3rd) each sample
+      A/B/C lands in for this trial, so position bias (e.g. "people tend
+      to pick the middle option") can't favor one system over another.
+      Chosen answers are stored as the true label (A/B/C), never the slot. */
 function shuffledIndices(n){
   const arr=Array.from({length:n},(_,i)=>i);
   for(let i=arr.length-1;i>0;i--){
@@ -331,77 +334,41 @@ function shuffledIndices(n){
   }
   return arr;
 }
+function shuffledLabels(){
+  const labels=['A','B','C'];
+  for(let i=labels.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [labels[i],labels[j]]=[labels[j],labels[i]];
+  }
+  return labels;
+}
+TRIALS.forEach(t=>{ t.slots=shuffledLabels(); });
 const ORDER=shuffledIndices(CONFIG.QUESTION_COUNT);
 const POSITION_OF=new Array(CONFIG.QUESTION_COUNT);
 ORDER.forEach((identityIdx,pos)=>{ POSITION_OF[identityIdx]=pos; });
 
-/* ---------- precompute waveform bar heights ---------- */
-function barsFor(seed,count){
-  const r=mulberry32(seed); const out=[];
-  for(let i=0;i<count;i++){
-    const env=Math.sin((i/(count-1))*Math.PI); // taper ends
-    const v=(0.28+0.72*r())*(0.45+0.55*env);
-    out.push(Math.max(0.08,Math.min(1,v)));
-  }
-  return out;
+/* ---------- audio playback ----------
+   Only one clip (reference or candidate) plays at a time across the
+   whole trial; picking a new one stops whatever was playing. */
+const PLAY_ICON='<svg class="ic-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+const PAUSE_ICON='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+let currentAudio=null; // {el, key, btn}
+function stopAllAudio(){
+  if(currentAudio){ try{currentAudio.el.pause();}catch(e){} }
+  currentAudio=null;
+  document.querySelectorAll('.play.playing').forEach(el=>{ el.classList.remove('playing'); el.innerHTML=PLAY_ICON; });
 }
-
-/* ---------- Web Audio playback ---------- */
-let AC=null;
-function ctx(){ if(!AC){ const C=window.AudioContext||window.webkitAudioContext; AC=new C(); } if(AC.state==='suspended') AC.resume(); return AC; }
-let current=null; // {stop, panel}
-function stopAll(){ if(current){ try{current.stop();}catch(e){} current=null; } }
-function playClip(clip, onFrame, onEnd){
-  stopAll();
-  const ac=ctx(); const t0=ac.currentTime; const dur=clip.dur;
-  const osc=ac.createOscillator(); const osc2=ac.createOscillator();
-  const gain=ac.createGain(); const filt=ac.createBiquadFilter();
-  osc.type=clip.type; osc.frequency.value=clip.freq;
-  osc2.type='sine'; osc2.frequency.value=clip.freq*2.001; // gentle harmonic
-  const g2=ac.createGain(); g2.gain.value=0.18;
-  filt.type='lowpass'; filt.frequency.value=Math.min(6500, clip.freq*8);
-  gain.gain.setValueAtTime(0,t0);
-  gain.gain.linearRampToValueAtTime(0.22,t0+0.04);
-  gain.gain.setValueAtTime(0.22,t0+dur-0.25);
-  gain.gain.linearRampToValueAtTime(0.0001,t0+dur);
-  // soft vibrato
-  const lfo=ac.createOscillator(); const lfoG=ac.createGain();
-  lfo.frequency.value=5; lfoG.gain.value=clip.freq*0.006;
-  lfo.connect(lfoG); lfoG.connect(osc.frequency);
-  osc.connect(filt); osc2.connect(g2); g2.connect(filt); filt.connect(gain); gain.connect(ac.destination);
-  osc.start(t0); osc2.start(t0); lfo.start(t0);
-  osc.stop(t0+dur); osc2.stop(t0+dur); lfo.stop(t0+dur);
-  let raf;
-  const tick=()=>{ const p=Math.min(1,(ac.currentTime-t0)/dur); onFrame&&onFrame(p); if(p<1){ raf=requestAnimationFrame(tick);} };
-  raf=requestAnimationFrame(tick);
-  const ended=()=>{ cancelAnimationFrame(raf); onEnd&&onEnd(); };
-  osc.onended=ended;
-  const stop=()=>{ cancelAnimationFrame(raf); try{osc.stop();osc2.stop();lfo.stop();}catch(e){} onEnd&&onEnd(); };
-  current={stop};
-  return stop;
+function playAudio(key, src, btnEl, barEl){
+  if(currentAudio && currentAudio.key===key){ stopAllAudio(); return; }
+  stopAllAudio();
+  const el=new Audio(src);
+  currentAudio={el,key,btn:btnEl};
+  btnEl.classList.add('playing'); btnEl.innerHTML=PAUSE_ICON;
+  barEl.style.width='0%';
+  el.addEventListener('timeupdate',()=>{ if(el.duration) barEl.style.width=((el.currentTime/el.duration)*100)+'%'; });
+  el.addEventListener('ended',()=>{ barEl.style.width='100%'; stopAllAudio(); });
+  el.play().catch(()=>{ stopAllAudio(); });
 }
-
-/* ---------- waveform drawing ---------- */
-function drawWave(canvas, bars, progress, active){
-  const cs=getComputedStyle(document.documentElement);
-  const idle=cs.getPropertyValue('--line-strong').trim();
-  const acc=cs.getPropertyValue('--accent').trim();
-  const dpr=window.devicePixelRatio||1;
-  const w=canvas.clientWidth||220, h=canvas.clientHeight||52;
-  canvas.width=w*dpr; canvas.height=h*dpr;
-  const g=canvas.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,w,h);
-  const n=bars.length; const gap=2; const bw=Math.max(1.5,(w-(n-1)*gap)/n); const mid=h/2;
-  for(let i=0;i<n;i++){
-    const bh=Math.max(2,bars[i]*(h-6));
-    const x=i*(bw+gap); const played=(i/n)<=progress;
-    g.fillStyle=(active&&played)?acc:idle;
-    if(!active) g.globalAlpha=0.55; else g.globalAlpha=played?1:0.4;
-    const r=Math.min(bw/2,2);
-    roundRect(g,x,mid-bh/2,bw,bh,r); g.fill();
-  }
-  g.globalAlpha=1;
-}
-function roundRect(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
 
 /* ---------- state ---------- */
 const state={
@@ -422,23 +389,26 @@ function setRail(){
   $('rail').style.width=pct+'%';
 }
 
-/* ---------- render a question ---------- */
-let waveState={A:{bars:[],prog:0,playing:false},B:{bars:[],prog:0,playing:false}};
+/* ---------- render a trial ---------- */
+let samplePanelEls=[]; // this trial's 3 panel elements, indexed by slot
 function renderQuestion(){
-  stopAll(); state.playing=null;
-  const q=QUESTIONS[ORDER[state.idx]];
-  $('qtag').textContent='Pair '+String(q.n).padStart(2,'0');
-  $('qsub').textContent=q.sub;
-  $('qprompt').textContent=q.prompt;
-  $('cNow').textContent=String(q.n).padStart(2,'0');
-  waveState.A={bars:barsFor(q.a.seed,52),prog:0,playing:false};
-  waveState.B={bars:barsFor(q.b.seed,52),prog:0,playing:false};
-  renderWave('A'); renderWave('B');
-  resetPlayIcon('A'); resetPlayIcon('B');
-  // selection
-  const sel=state.answers[ORDER[state.idx]];
-  $('panelA').classList.toggle('sel',sel==='A');
-  $('panelB').classList.toggle('sel',sel==='B');
+  stopAllAudio();
+  const identityIdx=ORDER[state.idx];
+  const t=TRIALS[identityIdx];
+  $('qtag').textContent='Trial '+String(state.idx+1).padStart(2,'0');
+  $('qsub').textContent='target accent: '+fmtAccent(t.targetAccent);
+  $('cNow').textContent=String(state.idx+1).padStart(2,'0');
+
+  $('playAccentRef').dataset.src=t.audio.accentRef;
+  $('playVoiceRef').dataset.src=t.audio.voiceRef;
+  $('refVoiceLabel').textContent=' ('+fmtAccent(t.refAccent)+' accent)';
+  $('barAccentRef').style.width='0%';
+  $('barVoiceRef').style.width='0%';
+
+  renderSamplePanels(t);
+  const sel=state.answers[identityIdx];
+  samplePanelEls.forEach((el,slotIdx)=>{ el.classList.toggle('sel', t.slots[slotIdx]===sel); });
+
   const done=!!sel;
   $('nextBtn').disabled=!done;
   $('navHint').style.visibility=done?'hidden':'visible';
@@ -446,36 +416,38 @@ function renderQuestion(){
   $('nextLabel').textContent=state.reviewing?'Back to review':((state.idx===CONFIG.QUESTION_COUNT-1)?'Review':'Next');
   setRail();
 }
-function renderWave(which){
-  const cv=$('wave'+which); const w=waveState[which];
-  drawWave(cv,w.bars,w.prog,w.playing);
-}
-function resetPlayIcon(which){
-  const el=$('play'+which); el.classList.remove('playing');
-  el.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
-  el.setAttribute('aria-label','Play Sample '+which);
-}
-function setPauseIcon(which){
-  const el=$('play'+which); el.classList.add('playing');
-  el.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
-  el.setAttribute('aria-label','Stop Sample '+which);
-}
-function togglePlay(which){
-  const q=QUESTIONS[ORDER[state.idx]]; const clip=which==='A'?q.a:q.b;
-  const other=which==='A'?'B':'A';
-  // stop other
-  waveState[other].playing=false; waveState[other].prog=0; resetPlayIcon(other); renderWave(other);
-  if(state.playing===which){ stopAll(); return; }
-  state.playing=which; waveState[which].playing=true; setPauseIcon(which);
-  playClip(clip,(p)=>{ waveState[which].prog=p; renderWave(which); },()=>{
-    waveState[which].playing=false; waveState[which].prog=0; resetPlayIcon(which); renderWave(which);
-    if(state.playing===which) state.playing=null;
+function renderSamplePanels(t){
+  const grid=$('sampleGrid'); grid.innerHTML='';
+  samplePanelEls=[];
+  t.slots.forEach((label,slotIdx)=>{
+    const src=t.audio.samples[label];
+    const panel=document.createElement('button');
+    panel.type='button';
+    panel.className='panel';
+    panel.innerHTML=
+      '<div class="ptop">'+
+        '<div class="plabel"><span class="badge">'+(slotIdx+1)+'</span><span class="ptitle">Option '+(slotIdx+1)+'</span></div>'+
+        '<span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>'+
+      '</div>'+
+      '<div class="player">'+
+        '<span class="play" role="button" tabindex="0" aria-label="Play option '+(slotIdx+1)+'">'+PLAY_ICON+'</span>'+
+        '<div class="barwrap"><div class="bar"></div></div>'+
+      '</div>';
+    const playBtn=panel.querySelector('.play');
+    const bar=panel.querySelector('.bar');
+    const trigger=(e)=>{ e.stopPropagation(); playAudio('sample'+slotIdx, src, playBtn, bar); };
+    playBtn.addEventListener('click',trigger);
+    playBtn.addEventListener('keydown',(e)=>{ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); trigger(e); } });
+    panel.addEventListener('click',(e)=>{ if(e.target.closest('.play'))return; choose(label); });
+    grid.appendChild(panel);
+    samplePanelEls.push(panel);
   });
 }
-function choose(which){
-  state.answers[ORDER[state.idx]]=which;
-  $('panelA').classList.toggle('sel',which==='A');
-  $('panelB').classList.toggle('sel',which==='B');
+function choose(label){
+  const identityIdx=ORDER[state.idx];
+  state.answers[identityIdx]=label;
+  const t=TRIALS[identityIdx];
+  samplePanelEls.forEach((el,slotIdx)=>{ el.classList.toggle('sel', t.slots[slotIdx]===label); });
   $('nextBtn').disabled=false; $('navHint').style.visibility='hidden';
   scheduleAutosave();
 }
@@ -483,18 +455,19 @@ function choose(which){
 /* ---------- review ---------- */
 function renderReview(){
   const grid=$('grid20'); grid.innerHTML='';
-  let count=0,a=0,b=0;
+  let count=0;
   for(let i=0;i<CONFIG.QUESTION_COUNT;i++){
     const v=state.answers[i];
-    if(v){count++; if(v==='A')a++; else b++;}
+    if(v) count++;
+    const pickedSlot=v?TRIALS[i].slots.indexOf(v)+1:null;
     const btn=document.createElement('button');
     btn.className='rchip'+(v?'':' missing');
-    btn.innerHTML='<span class="rn">Pair '+String(i+1).padStart(2,'0')+'</span>'+
-      '<span class="rv '+(v?'set':'miss')+'">'+(v?v:'—')+'</span>';
+    btn.innerHTML='<span class="rn">Trial '+String(i+1).padStart(2,'0')+'</span>'+
+      '<span class="rv '+(v?'set':'miss')+'">'+(v?'Option '+pickedSlot:'—')+'</span>';
     btn.addEventListener('click',()=>{ state.idx=POSITION_OF[i]; state.reviewing=true; show('question'); renderQuestion(); });
     grid.appendChild(btn);
   }
-  $('tally').innerHTML='<b>'+count+'</b> / '+CONFIG.QUESTION_COUNT+' answered &nbsp;·&nbsp; A: <b>'+a+'</b> &nbsp; B: <b>'+b+'</b>';
+  $('tally').innerHTML='<b>'+count+'</b> / '+CONFIG.QUESTION_COUNT+' answered';
   $('submitBtn').disabled=false;
   setRail();
 }
@@ -502,7 +475,7 @@ function renderReview(){
 /* ---------- submit ---------- */
 function buildPayload(status){
   const ans={};
-  for(let i=0;i<CONFIG.QUESTION_COUNT;i++){ ans['q'+(i+1)]=state.answers[i]||''; }
+  TRIALS.forEach((t,i)=>{ ans[t.id]=state.answers[i]||''; });
   return {
     sessionId: state.sessionId,
     status: status||'in_progress',
@@ -517,7 +490,7 @@ function buildPayload(status){
 
 /* ---------- autosave ----------
    Plenty of participants close the tab partway through. Without this,
-   whoever stops at question 12 of 20 leaves behind zero data. Autosave
+   whoever stops at trial 12 of 20 leaves behind zero data. Autosave
    sends the same shape of payload as the final submit, tagged
    status:'in_progress' and keyed by sessionId, every time an answer
    changes (debounced) and once more, via sendBeacon, the instant the tab
@@ -551,6 +524,7 @@ function downloadPayload(payload){
 }
 
 function submit(){
+  stopAllAudio();
   clearTimeout(autosaveTimer);
   const payload=buildPayload('completed');
   if(!CONFIG.ENDPOINT){
@@ -599,7 +573,6 @@ $('theme').addEventListener('click',()=>{
   document.documentElement.setAttribute('data-theme',next);
   try{localStorage.setItem('lt-theme',next);}catch(e){}
   updateThemeIcon();
-  if(!screens.question.hidden){ renderWave('A'); renderWave('B'); }
 });
 
 /* ---------- wire up ---------- */
@@ -613,22 +586,25 @@ $('startBtn').addEventListener('click',()=>{
   state.idx=0; state.reviewing=false; show('question'); renderQuestion();
   sendAutosave(); // record a 'started' row immediately, even before the first answer
 });
-$('panelA').addEventListener('click',(e)=>{ if(e.target.closest('.play'))return; choose('A'); });
-$('panelB').addEventListener('click',(e)=>{ if(e.target.closest('.play'))return; choose('B'); });
-function playHandler(which){return (e)=>{ e.stopPropagation(); togglePlay(which); };}
-$('playA').addEventListener('click',playHandler('A'));
-$('playB').addEventListener('click',playHandler('B'));
-$('playA').addEventListener('keydown',(e)=>{ if(e.key===' '||e.key==='Enter'){e.preventDefault();e.stopPropagation();togglePlay('A');} });
-$('playB').addEventListener('keydown',(e)=>{ if(e.key===' '||e.key==='Enter'){e.preventDefault();e.stopPropagation();togglePlay('B');} });
+function refPlayHandler(key){
+  return (e)=>{
+    e.stopPropagation();
+    const btn=$('play'+key);
+    playAudio('ref'+key, btn.dataset.src, btn, $('bar'+key));
+  };
+}
+$('playAccentRef').addEventListener('click',refPlayHandler('AccentRef'));
+$('playVoiceRef').addEventListener('click',refPlayHandler('VoiceRef'));
+$('playAccentRef').addEventListener('keydown',(e)=>{ if(e.key===' '||e.key==='Enter'){e.preventDefault();refPlayHandler('AccentRef')(e);} });
+$('playVoiceRef').addEventListener('keydown',(e)=>{ if(e.key===' '||e.key==='Enter'){e.preventDefault();refPlayHandler('VoiceRef')(e);} });
 $('nextBtn').addEventListener('click',()=>{
-  if(state.reviewing||state.idx===CONFIG.QUESTION_COUNT-1){ stopAll(); state.reviewing=false; show('review'); renderReview(); }
+  if(state.reviewing||state.idx===CONFIG.QUESTION_COUNT-1){ stopAllAudio(); state.reviewing=false; show('review'); renderReview(); }
   else { state.idx++; renderQuestion(); }
 });
 $('prevBtn').addEventListener('click',()=>{ if(state.idx>0){ state.idx--; renderQuestion(); } });
 $('backToTop').addEventListener('click',()=>{ state.idx=0; state.reviewing=false; show('question'); renderQuestion(); });
 $('submitBtn').addEventListener('click',submit);
 
-window.addEventListener('resize',()=>{ if(!screens.question.hidden){ renderWave('A'); renderWave('B'); } });
 setRail();
 </script>
 </body>

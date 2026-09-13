@@ -491,30 +491,56 @@ function buildPayload(){
     answers: ans,
   };
 }
+function downloadPayload(payload){
+  try{
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob); const aEl=document.createElement('a');
+    aEl.href=url; aEl.download='listening-test-response.json'; document.body.appendChild(aEl); aEl.click();
+    aEl.remove(); URL.revokeObjectURL(url);
+  }catch(e){}
+}
+
+/* JSONP-style submit: a normal fetch(..., {mode:'no-cors'}) POST can never
+   tell us whether the row was actually saved (the response is opaque), so
+   silent failures go unnoticed. This loads the collector as a <script> tag
+   instead — cross-origin script loads aren't blocked by CORS — and the
+   server calls back into our callback with a real {ok:true|false}. */
+function jsonpSubmit(url, payload, timeoutMs){
+  return new Promise((resolve, reject)=>{
+    const cbName='ltk_'+Math.random().toString(36).slice(2);
+    const script=document.createElement('script');
+    let settled=false;
+    const timer=setTimeout(()=>{ if(settled)return; settled=true; cleanup(); reject(new Error('timed out waiting for the collector')); }, timeoutMs||15000);
+    function cleanup(){ clearTimeout(timer); try{ delete window[cbName]; }catch(e){ window[cbName]=undefined; } script.remove(); }
+    window[cbName]=(data)=>{ if(settled)return; settled=true; cleanup(); resolve(data); };
+    script.onerror=()=>{ if(settled)return; settled=true; cleanup(); reject(new Error('could not reach the collector')); };
+    const b64=btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+    script.src=url+(url.includes('?')?'&':'?')+'callback='+encodeURIComponent(cbName)+'&payload='+encodeURIComponent(b64);
+    document.body.appendChild(script);
+  });
+}
+
 async function submit(){
   const btn=$('submitBtn'); btn.disabled=true; btn.querySelector('span').textContent='Submitting…';
   const payload=buildPayload();
   const err=$('submitErr'); err.hidden=true;
   if(!CONFIG.ENDPOINT){
     // demo mode: download locally
-    try{
-      const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-      const url=URL.createObjectURL(blob); const aEl=document.createElement('a');
-      aEl.href=url; aEl.download='listening-test-response.json'; document.body.appendChild(aEl); aEl.click();
-      aEl.remove(); URL.revokeObjectURL(url);
-    }catch(e){}
+    downloadPayload(payload);
     $('demoFlag').hidden=false;
     show('done'); setRail(); return;
   }
   try{
-    await fetch(CONFIG.ENDPOINT,{
-      method:'POST', mode:'no-cors',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify(payload),
-    });
+    const res=await jsonpSubmit(CONFIG.ENDPOINT, payload, 15000);
+    if(!res || res.ok!==true) throw new Error((res&&res.error)||'the collector reported a failure');
+    try{ localStorage.removeItem('listeningTestBackup'); }catch(e){}
     show('done'); setRail();
   }catch(e){
-    err.hidden=false; err.textContent='Could not reach the server. Please check your connection and try Submit again.';
+    try{ localStorage.setItem('listeningTestBackup', JSON.stringify(payload)); }catch(_){}
+    err.hidden=false;
+    err.innerHTML='Your submission could not be confirmed ('+e.message+'). Your answers are backed up in this browser — try Submit again, or <a href="#" id="downloadBackupLink">download a backup copy</a> and send it to the researcher.';
+    const link=document.getElementById('downloadBackupLink');
+    if(link) link.addEventListener('click',(ev)=>{ ev.preventDefault(); downloadPayload(payload); });
     btn.disabled=false; btn.querySelector('span').textContent='Submit answers';
   }
 }

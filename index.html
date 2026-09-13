@@ -318,6 +318,25 @@ const QUESTIONS = Array.from({length:CONFIG.QUESTION_COUNT},(_,i)=>{
   };
 });
 
+/* ---------- per-participant presentation order ----------
+   Each visitor sees the 20 pairs in a different shuffled order (so q1
+   isn't always first), but every answer is still stored keyed by its
+   true identity (q.n), never by the order it was shown in — that's what
+   ORDER/POSITION_OF are for. state.idx always means "position in the
+   shuffled sequence"; ORDER[state.idx] maps that back to the real
+   question identity index (0-based, i.e. q.n-1). */
+function shuffledIndices(n){
+  const arr=Array.from({length:n},(_,i)=>i);
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+const ORDER=shuffledIndices(CONFIG.QUESTION_COUNT);
+const POSITION_OF=new Array(CONFIG.QUESTION_COUNT);
+ORDER.forEach((identityIdx,pos)=>{ POSITION_OF[identityIdx]=pos; });
+
 /* ---------- precompute waveform bar heights ---------- */
 function barsFor(seed,count){
   const r=mulberry32(seed); const out=[];
@@ -406,7 +425,7 @@ function setRail(){
 let waveState={A:{bars:[],prog:0,playing:false},B:{bars:[],prog:0,playing:false}};
 function renderQuestion(){
   stopAll(); state.playing=null;
-  const q=QUESTIONS[state.idx];
+  const q=QUESTIONS[ORDER[state.idx]];
   $('qtag').textContent='Pair '+String(q.n).padStart(2,'0');
   $('qsub').textContent=q.sub;
   $('qprompt').textContent=q.prompt;
@@ -416,7 +435,7 @@ function renderQuestion(){
   renderWave('A'); renderWave('B');
   resetPlayIcon('A'); resetPlayIcon('B');
   // selection
-  const sel=state.answers[state.idx];
+  const sel=state.answers[ORDER[state.idx]];
   $('panelA').classList.toggle('sel',sel==='A');
   $('panelB').classList.toggle('sel',sel==='B');
   const done=!!sel;
@@ -441,7 +460,7 @@ function setPauseIcon(which){
   el.setAttribute('aria-label','Stop Sample '+which);
 }
 function togglePlay(which){
-  const q=QUESTIONS[state.idx]; const clip=which==='A'?q.a:q.b;
+  const q=QUESTIONS[ORDER[state.idx]]; const clip=which==='A'?q.a:q.b;
   const other=which==='A'?'B':'A';
   // stop other
   waveState[other].playing=false; waveState[other].prog=0; resetPlayIcon(other); renderWave(other);
@@ -453,7 +472,7 @@ function togglePlay(which){
   });
 }
 function choose(which){
-  state.answers[state.idx]=which;
+  state.answers[ORDER[state.idx]]=which;
   $('panelA').classList.toggle('sel',which==='A');
   $('panelB').classList.toggle('sel',which==='B');
   $('nextBtn').disabled=false; $('navHint').style.visibility='hidden';
@@ -470,7 +489,7 @@ function renderReview(){
     btn.className='rchip'+(v?'':' missing');
     btn.innerHTML='<span class="rn">Pair '+String(i+1).padStart(2,'0')+'</span>'+
       '<span class="rv '+(v?'set':'miss')+'">'+(v?v:'—')+'</span>';
-    btn.addEventListener('click',()=>{ state.idx=i; show('question'); renderQuestion(); });
+    btn.addEventListener('click',()=>{ state.idx=POSITION_OF[i]; show('question'); renderQuestion(); });
     grid.appendChild(btn);
   }
   $('tally').innerHTML='<b>'+count+'</b> / '+CONFIG.QUESTION_COUNT+' answered &nbsp;·&nbsp; A: <b>'+a+'</b> &nbsp; B: <b>'+b+'</b>';

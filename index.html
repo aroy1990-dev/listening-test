@@ -562,18 +562,24 @@ async function submit(){
     $('demoFlag').hidden=false;
     show('done'); setRail(); return;
   }
+  const controller=new AbortController();
+  const timeoutId=setTimeout(()=>controller.abort(),12000);
   try{
     await fetch(CONFIG.ENDPOINT,{
       method:'POST', mode:'no-cors',
       headers:{'Content-Type':'text/plain;charset=utf-8'},
       body:JSON.stringify(payload),
+      signal:controller.signal,
     });
+    clearTimeout(timeoutId);
     try{ localStorage.removeItem('listeningTestBackup'); }catch(e){}
     show('done'); setRail();
   }catch(e){
+    clearTimeout(timeoutId);
     try{ localStorage.setItem('listeningTestBackup', JSON.stringify(payload)); }catch(_){}
+    const msg=(e&&e.name==='AbortError')?'the request took too long':e.message;
     err.hidden=false;
-    err.innerHTML='Could not reach the server ('+e.message+'). Your answers are backed up in this browser — try Submit again, or <a href="#" id="downloadBackupLink">download a backup copy</a>.';
+    err.innerHTML='Could not reach the server ('+msg+'). Your answers are backed up in this browser — try Submit again, or <a href="#" id="downloadBackupLink">download a backup copy</a>.';
     const link=document.getElementById('downloadBackupLink');
     if(link) link.addEventListener('click',(ev)=>{ ev.preventDefault(); downloadPayload(payload); });
     btn.disabled=false; btn.querySelector('span').textContent='Submit answers';

@@ -406,7 +406,7 @@ function drawWave(canvas, bars, progress, active){
 function roundRect(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
 
 /* ---------- state ---------- */
-const state={ idx:0, answers:{}, participant:"", startedAt:null, playing:null };
+const state={ idx:0, answers:{}, participant:"", startedAt:null, playing:null, reviewing:false };
 const $=id=>document.getElementById(id);
 const screens={intro:$('intro'),question:$('question'),review:$('review'),done:$('done')};
 function show(name){ for(const k in screens){ screens[k].hidden=(k!==name);} $('counter').hidden=(name!=='question'); window.scrollTo({top:0,behavior:'instant'in window?'instant':'auto'}); }
@@ -442,7 +442,7 @@ function renderQuestion(){
   $('nextBtn').disabled=!done;
   $('navHint').style.visibility=done?'hidden':'visible';
   $('prevBtn').style.visibility=state.idx===0?'hidden':'visible';
-  $('nextLabel').textContent=(state.idx===CONFIG.QUESTION_COUNT-1)?'Review':'Next';
+  $('nextLabel').textContent=state.reviewing?'Back to review':((state.idx===CONFIG.QUESTION_COUNT-1)?'Review':'Next');
   setRail();
 }
 function renderWave(which){
@@ -489,7 +489,7 @@ function renderReview(){
     btn.className='rchip'+(v?'':' missing');
     btn.innerHTML='<span class="rn">Pair '+String(i+1).padStart(2,'0')+'</span>'+
       '<span class="rv '+(v?'set':'miss')+'">'+(v?v:'—')+'</span>';
-    btn.addEventListener('click',()=>{ state.idx=POSITION_OF[i]; show('question'); renderQuestion(); });
+    btn.addEventListener('click',()=>{ state.idx=POSITION_OF[i]; state.reviewing=true; show('question'); renderQuestion(); });
     grid.appendChild(btn);
   }
   $('tally').innerHTML='<b>'+count+'</b> / '+CONFIG.QUESTION_COUNT+' answered &nbsp;·&nbsp; A: <b>'+a+'</b> &nbsp; B: <b>'+b+'</b>';
@@ -580,7 +580,7 @@ initTheme();
 $('startBtn').addEventListener('click',()=>{
   state.participant=$('pid').value.trim();
   state.startedAt=new Date().toISOString();
-  state.idx=0; show('question'); renderQuestion();
+  state.idx=0; state.reviewing=false; show('question'); renderQuestion();
 });
 $('panelA').addEventListener('click',(e)=>{ if(e.target.closest('.play'))return; choose('A'); });
 $('panelB').addEventListener('click',(e)=>{ if(e.target.closest('.play'))return; choose('B'); });
@@ -590,11 +590,11 @@ $('playB').addEventListener('click',playHandler('B'));
 $('playA').addEventListener('keydown',(e)=>{ if(e.key===' '||e.key==='Enter'){e.preventDefault();e.stopPropagation();togglePlay('A');} });
 $('playB').addEventListener('keydown',(e)=>{ if(e.key===' '||e.key==='Enter'){e.preventDefault();e.stopPropagation();togglePlay('B');} });
 $('nextBtn').addEventListener('click',()=>{
-  if(state.idx===CONFIG.QUESTION_COUNT-1){ stopAll(); show('review'); renderReview(); }
+  if(state.reviewing||state.idx===CONFIG.QUESTION_COUNT-1){ stopAll(); state.reviewing=false; show('review'); renderReview(); }
   else { state.idx++; renderQuestion(); }
 });
 $('prevBtn').addEventListener('click',()=>{ if(state.idx>0){ state.idx--; renderQuestion(); } });
-$('backToTop').addEventListener('click',()=>{ state.idx=0; show('question'); renderQuestion(); });
+$('backToTop').addEventListener('click',()=>{ state.idx=0; state.reviewing=false; show('question'); renderQuestion(); });
 $('submitBtn').addEventListener('click',submit);
 
 window.addEventListener('resize',()=>{ if(!screens.question.hidden){ renderWave('A'); renderWave('B'); } });

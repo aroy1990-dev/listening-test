@@ -406,7 +406,10 @@ function drawWave(canvas, bars, progress, active){
 function roundRect(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
 
 /* ---------- state ---------- */
-const state={ idx:0, answers:{}, participant:"", startedAt:null, playing:null, reviewing:false };
+const state={
+  idx:0, answers:{}, participant:"", startedAt:null, playing:null, reviewing:false,
+  sessionId: (crypto.randomUUID ? crypto.randomUUID() : ('sid_'+Date.now().toString(36)+Math.random().toString(36).slice(2))),
+};
 const $=id=>document.getElementById(id);
 const screens={intro:$('intro'),question:$('question'),review:$('review'),done:$('done')};
 function show(name){ for(const k in screens){ screens[k].hidden=(k!==name);} $('counter').hidden=(name!=='question'); window.scrollTo({top:0,behavior:'instant'in window?'instant':'auto'}); }
@@ -476,6 +479,7 @@ function choose(which){
   $('panelA').classList.toggle('sel',which==='A');
   $('panelB').classList.toggle('sel',which==='B');
   $('nextBtn').disabled=false; $('navHint').style.visibility='hidden';
+  scheduleAutosave();
 }
 
 /* ---------- review ---------- */
@@ -498,10 +502,12 @@ function renderReview(){
 }
 
 /* ---------- submit ---------- */
-function buildPayload(){
+function buildPayload(status){
   const ans={};
   for(let i=0;i<CONFIG.QUESTION_COUNT;i++){ ans['q'+(i+1)]=state.answers[i]||''; }
   return {
+    sessionId: state.sessionId,
+    status: status||'in_progress',
     participant: state.participant||'',
     startedAt: state.startedAt,
     submittedAt: new Date().toISOString(),
@@ -510,6 +516,32 @@ function buildPayload(){
     answers: ans,
   };
 }
+
+/* ---------- autosave ----------
+   Plenty of participants close the tab partway through. Without this,
+   whoever stops at question 12 of 20 leaves behind zero data. Autosave
+   sends the same shape of payload as the final submit, tagged
+   status:'in_progress' and keyed by sessionId, every time an answer
+   changes (debounced) and once more, via sendBeacon, the instant the tab
+   is hidden or closed — a plain fetch can be killed mid-flight on unload,
+   sendBeacon exists specifically to survive that. */
+let autosaveTimer=null;
+function scheduleAutosave(){
+  if(!CONFIG.ENDPOINT||!state.startedAt) return;
+  clearTimeout(autosaveTimer);
+  autosaveTimer=setTimeout(()=>sendAutosave(),700);
+}
+function sendAutosave(useBeacon){
+  if(!CONFIG.ENDPOINT||!state.startedAt) return;
+  const body=JSON.stringify(buildPayload('in_progress'));
+  if(useBeacon&&navigator.sendBeacon){
+    navigator.sendBeacon(CONFIG.ENDPOINT, new Blob([body],{type:'text/plain;charset=utf-8'}));
+    return;
+  }
+  fetch(CONFIG.ENDPOINT,{ method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body }).catch(()=>{});
+}
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') sendAutosave(true); });
+window.addEventListener('pagehide',()=>{ sendAutosave(true); });
 function downloadPayload(payload){
   try{
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
@@ -520,8 +552,9 @@ function downloadPayload(payload){
 }
 
 async function submit(){
+  clearTimeout(autosaveTimer);
   const btn=$('submitBtn'); btn.disabled=true; btn.querySelector('span').textContent='Submitting…';
-  const payload=buildPayload();
+  const payload=buildPayload('completed');
   const err=$('submitErr'); err.hidden=true;
   if(!CONFIG.ENDPOINT){
     // demo mode: download locally
@@ -581,6 +614,7 @@ $('startBtn').addEventListener('click',()=>{
   state.participant=$('pid').value.trim();
   state.startedAt=new Date().toISOString();
   state.idx=0; state.reviewing=false; show('question'); renderQuestion();
+  sendAutosave(); // record a 'started' row immediately, even before the first answer
 });
 $('panelA').addEventListener('click',(e)=>{ if(e.target.closest('.play'))return; choose('A'); });
 $('panelB').addEventListener('click',(e)=>{ if(e.target.closest('.play'))return; choose('B'); });

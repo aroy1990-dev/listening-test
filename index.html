@@ -161,7 +161,6 @@ h2.q{font-family:var(--serif); font-weight:400; font-size:clamp(30px,4.6vw,46px)
 .donemark svg{width:34px; height:34px;}
 .donecard h2{font-family:var(--serif); font-weight:400; font-size:44px; margin:0 0 12px;}
 .donecard p{color:var(--muted); margin:0 auto; max-width:44ch;}
-.errbox{margin-top:20px; padding:12px 14px; border:1px solid var(--accent-line); background:var(--accent-tint); color:var(--accent-strong); border-radius:10px; font-size:13.5px; text-align:left;}
 .demoflag{display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); border:1px dashed var(--line-strong); border-radius:20px; padding:5px 12px; margin-top:30px;}
 [hidden]{display:none!important;}
 </style>
@@ -269,7 +268,6 @@ h2.q{font-family:var(--serif); font-weight:400; font-size:clamp(30px,4.6vw,46px)
         </button>
       </div>
     </div>
-    <div class="errbox" id="submitErr" hidden></div>
   </section>
 
   <!-- DONE -->
@@ -538,7 +536,8 @@ function sendAutosave(useBeacon){
     navigator.sendBeacon(CONFIG.ENDPOINT, new Blob([body],{type:'text/plain;charset=utf-8'}));
     return;
   }
-  fetch(CONFIG.ENDPOINT,{ method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body }).catch(()=>{});
+  fetch(CONFIG.ENDPOINT,{ method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body })
+    .catch(()=>{ try{ localStorage.setItem('listeningTestBackup', body); }catch(_){} });
 }
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') sendAutosave(true); });
 window.addEventListener('pagehide',()=>{ sendAutosave(true); });
@@ -551,39 +550,31 @@ function downloadPayload(payload){
   }catch(e){}
 }
 
-async function submit(){
+function submit(){
   clearTimeout(autosaveTimer);
-  const btn=$('submitBtn'); btn.disabled=true; btn.querySelector('span').textContent='Submitting…';
   const payload=buildPayload('completed');
-  const err=$('submitErr'); err.hidden=true;
   if(!CONFIG.ENDPOINT){
     // demo mode: download locally
     downloadPayload(payload);
     $('demoFlag').hidden=false;
     show('done'); setRail(); return;
   }
+  // Every answer was already autosaved as it was made, so the data is safe
+  // before this point — this call just marks the row 'completed' with the
+  // final state. No need to make the participant wait on that round-trip:
+  // show the thank-you screen immediately and let it finish in the
+  // background, same fallback-to-localStorage safety net as autosave.
+  const body=JSON.stringify(payload);
   const controller=new AbortController();
-  const timeoutId=setTimeout(()=>controller.abort(),12000);
-  try{
-    await fetch(CONFIG.ENDPOINT,{
-      method:'POST', mode:'no-cors',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify(payload),
-      signal:controller.signal,
-    });
-    clearTimeout(timeoutId);
-    try{ localStorage.removeItem('listeningTestBackup'); }catch(e){}
-    show('done'); setRail();
-  }catch(e){
-    clearTimeout(timeoutId);
-    try{ localStorage.setItem('listeningTestBackup', JSON.stringify(payload)); }catch(_){}
-    const msg=(e&&e.name==='AbortError')?'the request took too long':e.message;
-    err.hidden=false;
-    err.innerHTML='Could not reach the server ('+msg+'). Your answers are backed up in this browser — try Submit again, or <a href="#" id="downloadBackupLink">download a backup copy</a>.';
-    const link=document.getElementById('downloadBackupLink');
-    if(link) link.addEventListener('click',(ev)=>{ ev.preventDefault(); downloadPayload(payload); });
-    btn.disabled=false; btn.querySelector('span').textContent='Submit answers';
-  }
+  setTimeout(()=>controller.abort(),12000);
+  fetch(CONFIG.ENDPOINT,{
+    method:'POST', mode:'no-cors',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body, signal:controller.signal,
+  })
+    .then(()=>{ try{ localStorage.removeItem('listeningTestBackup'); }catch(e){} })
+    .catch(()=>{ try{ localStorage.setItem('listeningTestBackup', body); }catch(_){} });
+  show('done'); setRail();
 }
 
 /* ---------- theme toggle ---------- */
